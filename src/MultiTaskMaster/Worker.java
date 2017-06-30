@@ -34,8 +34,10 @@ public abstract class Worker implements Runnable{
     public Worker(){}
 
     /**
-     * 实现该方法时，可以将每个线程的运行结果放到结果集中，
-     * 结果集作为后续线程的参数，可以调用
+     * 实现该方法时，将每个线程的运行结果放到结果集中，
+     * 用作后续线程的参数调用，
+     * 业务失败时将失败信息放到失败结果集中，
+     * 并结束整个方法
      * @throws Exception
      */
     public abstract void handler() throws Exception;

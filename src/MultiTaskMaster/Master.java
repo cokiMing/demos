@@ -18,16 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Master {
 
+    //参数集——用于存储入口的参数
     private Map<String,Object> argsMap = new HashMap<>();
 
+    //线程集——master的线程池，用于调配worker任务
     private Map<String,Thread> threadMap = new HashMap<>();
 
+    //结果集——用于存储worker执行结果
     private Map<String,Object> resultMap = new ConcurrentHashMap<>();
 
+    //异常集——用于存储worker执行过程中产生的异常
     private volatile Map<String,Exception> exceptionMap = new ConcurrentHashMap<>();
 
+    //失败集——用于存储worker执行过程中产生的业务失败集合
     private volatile Map<String,String> failMap = new ConcurrentHashMap<>();
 
+    //任务集——用于存储worker
     private List<Worker> workerList = new ArrayList<>();
 
     public Map<String, Object> getResultMap() {
@@ -38,6 +44,11 @@ public class Master {
         this.argsMap = argsMap;
     }
 
+    //清空线程池
+    public void cleanThreads(){
+        threadMap.clear();
+    }
+
     //查看所有任务是否已经完毕
     public boolean isComplete(){
         for(Map.Entry<String , Thread> entry:threadMap.entrySet()){
@@ -46,11 +57,6 @@ public class Master {
             }
         }
         return true;
-    }
-
-    //清空线程池
-    public void cleanThreads(){
-        threadMap.clear();
     }
 
     //清空任务池
@@ -106,6 +112,13 @@ public class Master {
         }
         for(Map.Entry<String,Thread> map : threadMap.entrySet()){
             map.getValue().start();
+        }
+    }
+
+    //中断所有任务
+    public void interrupt(){
+        for(Map.Entry<String,Thread> map : threadMap.entrySet()){
+            map.getValue().interrupt();
         }
     }
 }

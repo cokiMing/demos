@@ -78,15 +78,13 @@ public class Main {
     //等待线程运行结果，并判断是否需要中断
     private static boolean checkLoop(Master master){
         while (!master.isComplete()){
-            /**
-             * 以下异常及失败捕捉建议在调试时屏蔽，以方便异常的追踪和暴露
-             * 不屏蔽的情况下可以实现对客户端的快速响应
-             */
             if (master.isException()){
                 master.printExceptions();
+                master.interrupt();
                 return true;
             }
             if (master.isFail()){
+                master.interrupt();
                 return true;
             }
         }
