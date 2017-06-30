@@ -11,7 +11,9 @@ public abstract class Worker implements Runnable{
 
     protected Map<String,Object> resultMap;
 
-    protected Map<String,Exception> exceptionMap;
+    protected volatile Map<String,Exception> exceptionMap;
+
+    protected volatile Map<String,String> failMap;
 
     public void setArgsMap(Map<String, Object> argsMap) {
         this.argsMap = argsMap;
@@ -25,13 +27,11 @@ public abstract class Worker implements Runnable{
         this.exceptionMap = exceptionMap;
     }
 
-    public Worker(){}
-
-    public Worker(Master master){
-        this.argsMap = master.getArgsMap();
-        this.resultMap = master.getResultMap();
-        this.exceptionMap = master.getExceptionMap();
+    public void setFailMap(Map<String, String> failMap) {
+        this.failMap = failMap;
     }
+
+    public Worker(){}
 
     /**
      * 实现该方法时，可以将每个线程的运行结果放到结果集中，

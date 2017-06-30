@@ -7,6 +7,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Master类代表一个纵向的任务，
+ * 如果需要控制更紧密的任务耗时，
+ * 可以使用多个Master,但并不建议这样做。
+ *
+ * @author wuyiming
+ * @since 1.0
+ *
  * Created by wuyiming on 2017/6/29.
  */
 public class Master {
@@ -17,27 +24,21 @@ public class Master {
 
     private Map<String,Object> resultMap = new ConcurrentHashMap<>();
 
-    private Map<String,Exception> exceptionMap = new ConcurrentHashMap<>();
+    private volatile Map<String,Exception> exceptionMap = new ConcurrentHashMap<>();
+
+    private volatile Map<String,String> failMap = new ConcurrentHashMap<>();
 
     private List<Worker> workerList = new ArrayList<>();
 
-    public Map<String, Object> getArgsMap() {
-        return argsMap;
-    }
-
     public Map<String, Object> getResultMap() {
         return resultMap;
-    }
-
-    public Map<String, Exception> getExceptionMap() {
-        return exceptionMap;
     }
 
     public Master (Map<String,Object> argsMap){
         this.argsMap = argsMap;
     }
 
-    //若一轮内的所有任务完成则清空任务池
+    //查看所有任务是否已经完毕
     public boolean isComplete(){
         for(Map.Entry<String , Thread> entry:threadMap.entrySet()){
             if(entry.getValue().getState() != Thread.State.TERMINATED){
@@ -51,6 +52,7 @@ public class Master {
     public void cleanThreads(){
         threadMap.clear();
     }
+
     //清空任务池
     public void cleanWorkerList(){
         workerList.clear();
@@ -63,9 +65,22 @@ public class Master {
         }
     }
 
+    //获取业务失败信息
+    public String getFailMessage(){
+        for(Map.Entry<String,String> entry: failMap.entrySet()){
+            return entry.getValue();
+        }
+        return null;
+    }
+
     //查看一轮内的任务是否有异常
     public boolean isException(){
         return !exceptionMap.isEmpty();
+    }
+
+    //查看一轮内的任务是否有业务失败
+    public boolean isFail(){
+        return !failMap.isEmpty();
     }
 
     //设置单轮任务涉及的Worker类
@@ -85,6 +100,7 @@ public class Master {
             worker.setArgsMap(argsMap);
             worker.setResultMap(resultMap);
             worker.setExceptionMap(exceptionMap);
+            worker.setFailMap(failMap);
             Thread thread = new Thread(worker);
             threadMap.put(Integer.toString(i),thread);
         }
