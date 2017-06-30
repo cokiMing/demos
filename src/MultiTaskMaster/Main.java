@@ -24,7 +24,10 @@ public class Main {
             argsMap.put("address",address);
             Master master = new Master(argsMap);
 
-            //需要异步的任务设置
+            /**
+             * 这里设置的所有worker之间必须是平行且没有参数关联的
+             * 任何与本轮次有关联的任务都应该设置到下一轮中
+             */
             Worker nameWorker = new NameWorker();
             Worker ageWorker = new AgeWorker();
             Worker addressWorker = new AddressWorker();
@@ -61,7 +64,6 @@ public class Main {
 
     //等待线程运行结果，并判断是否需要中断
     private static boolean overLoop(Master master){
-
         while (!master.isComplete()){
             if (master.isException()){
                 //TODO 异常处理
@@ -69,6 +71,8 @@ public class Main {
                 return true;
             }
         }
+        master.cleanWorkerList();
+        master.cleanThreads();
         return false;
     }
 }

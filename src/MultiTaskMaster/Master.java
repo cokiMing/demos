@@ -44,16 +44,14 @@ public class Master {
                 return false;
             }
         }
-        cleanThreads();
-        cleanWorkerList();
         return true;
     }
 
-    //清空任务池
+    //清空线程池
     public void cleanThreads(){
         threadMap.clear();
     }
-
+    //清空任务池
     public void cleanWorkerList(){
         workerList.clear();
     }

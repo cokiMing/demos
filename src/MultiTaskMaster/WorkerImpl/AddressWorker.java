@@ -10,7 +10,7 @@ public class AddressWorker extends Worker {
     public void handler() throws Exception{
         Object result3 = argsMap.get("address");
         //TODO 业务代码
-        Thread.sleep(200);
+        Thread.sleep(150);
         resultMap.put("result3",result3);
     }
 }
