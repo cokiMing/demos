@@ -79,6 +79,14 @@ public class Master {
         return null;
     }
 
+    //获取异常
+    public Exception getException(){
+        for(Map.Entry<String,Exception> entry: exceptionMap.entrySet()){
+            return entry.getValue();
+        }
+        return null;
+    }
+
     //查看一轮内的任务是否有异常
     public boolean isException(){
         return !exceptionMap.isEmpty();

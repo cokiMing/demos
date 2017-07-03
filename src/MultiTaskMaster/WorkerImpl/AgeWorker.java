@@ -10,7 +10,8 @@ public class AgeWorker extends Worker{
     public void handler() throws Exception{
         Object result2 = argsMap.get("age");
         //TODO 业务代码
-        Thread.sleep(100);
+        Thread.sleep(90);
+        failMap.put(this.getClass().getName(),"fail");
         resultMap.put("result2",result2);
     }
 }

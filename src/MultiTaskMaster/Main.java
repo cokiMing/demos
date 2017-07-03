@@ -75,7 +75,7 @@ public class Main {
         }
     }
 
-    //等待线程运行结果，并判断是否需要中断
+    //等待线程运行结束,查看是否需要中断
     private static boolean checkLoop(Master master){
         while (!master.isComplete()){
             if (master.isException()){
