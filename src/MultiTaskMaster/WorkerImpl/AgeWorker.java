@@ -11,7 +11,7 @@ public class AgeWorker extends Worker{
         Object result2 = argsMap.get("age");
         //TODO 业务代码
         Thread.sleep(90);
-        failMap.put(this.getClass().getName(),"fail");
+        failMap.put(this.getClass().getName(),"年龄错误");
         resultMap.put("result2",result2);
     }
 }

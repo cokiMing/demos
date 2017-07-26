@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Master类代表一个纵向的任务，
+ * 它的结构是一个简单的线程池。
  * 如果需要控制更紧密的任务耗时，
  * 可以使用多个Master,但并不建议这样做。
  *
@@ -45,7 +46,7 @@ public class Master {
     }
 
     //清空线程池
-    public void cleanThreads(){
+    private void cleanThreads(){
         threadMap.clear();
     }
 
@@ -60,8 +61,9 @@ public class Master {
     }
 
     //清空任务池
-    public void cleanWorkerList(){
+    public void cleanWorkers(){
         workerList.clear();
+        cleanThreads();
     }
 
     //打印异常信息
@@ -128,6 +130,26 @@ public class Master {
         for(Map.Entry<String,Thread> map : threadMap.entrySet()){
             map.getValue().interrupt();
         }
+    }
+
+    //等待本轮次中的线程运行结束,如有业务失败或异常返回FALSE，该方法是阻塞式的
+    public boolean checkLoop(){
+        while (!isComplete()){
+            if (isException()){
+                printExceptions();
+                interrupt();
+                throw new RuntimeException(getException());
+            }
+            if (isFail()){
+                interrupt();
+                return true;
+            }
+        }
+
+        if(isException()){
+            throw new RuntimeException(getException());
+        }
+        return isFail();
     }
 }
 

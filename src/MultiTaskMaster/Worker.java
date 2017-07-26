@@ -31,8 +31,6 @@ public abstract class Worker implements Runnable{
         this.failMap = failMap;
     }
 
-    public Worker(){}
-
     /**
      * 实现该方法时，将每个线程的运行结果放到结果集中，
      * 用作后续线程的参数调用，

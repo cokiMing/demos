@@ -26,7 +26,8 @@ public class Main {
             Master master = new Master(argsMap);
 
             /**
-             * 这里设置的所有worker之间必须是没有参数关联的
+             * 可以根据需要通过Spring来生成worker
+             * 所有worker之间必须是没有参数关联的
              * 任何与本轮次其他任务结果或输入参数有关联的任务
              * 都应该设置到下一轮中
              */
@@ -48,21 +49,21 @@ public class Main {
                 //TODO SOMETHING
             }
 
-            //监听任务是否有异常
-            if(checkLoop(master)){
+            /*监听任务是否有异常,如果涉及数据库操作需要回滚
+              可以通过master.getException()获取异常，并抛出*/
+            if(master.checkLoop()){
                 String failMsg = master.getFailMessage();
-                failMsg = failMsg == null ? "系统异常":failMsg;
                 return Result.fail(failMsg);
             }
+            master.cleanWorkers();
 
             //装载下一轮任务并执行
             Worker personInfoWorker = new PersonInfoWorker();
             master.setWorker(personInfoWorker);
             master.execute();
 
-            if(checkLoop(master)){
+            if(master.checkLoop()){
                 String failMsg = master.getFailMessage();
-                failMsg = failMsg == null ? "系统异常":failMsg;
                 return Result.fail(failMsg);
             }
 
@@ -71,30 +72,7 @@ public class Main {
             return success;
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return Result.fail("正常任务错误");
+            return Result.fail("系统错误");
         }
-    }
-
-    //等待线程运行结束,查看是否需要中断
-    private static boolean checkLoop(Master master){
-        while (!master.isComplete()){
-            if (master.isException()){
-                master.printExceptions();
-                master.interrupt();
-                return true;
-            }
-            if (master.isFail()){
-                master.interrupt();
-                return true;
-            }
-        }
-        if (master.isException() || master.isFail()){
-            master.printExceptions();
-            return true;
-        }
-
-        master.cleanWorkerList();
-        master.cleanThreads();
-        return false;
     }
 }

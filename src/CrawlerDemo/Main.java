@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String args[]){
         String engine = "http://image.baidu.com/search/index?tn=baiduimage";
-        String keyWord = "以撒的结合";
+        String keyWord = "SABER";
 
         MainPage mainPage = new MainPage(engine,keyWord);
         String sourcePage = mainPage.getSourcePage();
