@@ -45,16 +45,12 @@ public class DeepCopy {
                 for (Method method : methods){
                     String name = method.getName();
                     if (name.startsWith("get")){
-                        try{
-                            String paramName = name.substring(3);
-                            Object value = method.invoke(t);
-                            if (value != null){
-                                value = deepCopy(value);
-                            }
-                            paramMap.put(paramName,value);
-                        }catch (Exception e){
-                            throw new Exception("get method invalid!");
+                        String paramName = name.substring(3);
+                        Object value = method.invoke(t);
+                        if (value != null){
+                            value = deepCopy(value);
                         }
+                        paramMap.put(paramName,value);
                     }
                 }
 
@@ -62,13 +58,9 @@ public class DeepCopy {
                 for (Method method : methods){
                     String name = method.getName();
                     if (name.startsWith("set")){
-                        try{
-                            String paramName = name.substring(3);
-                            Object value = paramMap.get(paramName);
-                            method.invoke(result,value);
-                        }catch (Exception e){
-                            throw new  Exception("set method invalid!");
-                        }
+                        String paramName = name.substring(3);
+                        Object value = paramMap.get(paramName);
+                        method.invoke(result,value);
                     }
                 }
                 return result;
@@ -124,7 +116,7 @@ public class DeepCopy {
         try{
             long millis = System.currentTimeMillis();
             Entity another = null;
-            for (int i=0;i<100;i++){
+            for (int i=0;i<500;i++){
                 another = deepCopy(entity);
             }
             System.out.println("深拷贝耗时："+(System.currentTimeMillis() - millis));
