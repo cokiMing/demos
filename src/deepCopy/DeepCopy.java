@@ -1,5 +1,10 @@
 package deepCopy;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.msgpack.MessagePack;
+import org.msgpack.template.Templates;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -7,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by wuyiming on 2017/7/25.
+ * 不支持字段类型为map的copy
  */
 public class DeepCopy {
 
@@ -81,6 +87,22 @@ public class DeepCopy {
         return t;
     }
 
+    public static <T> T deepCopyByJSON(T t){
+        String s = JSON.toJSONString(t);
+        return (T)JSON.parseObject(s,t.getClass());
+    }
+
+    public static <T> T deepCopyByMsgpack(T t) throws Exception{
+        MessagePack messagePack = new MessagePack();
+        try{
+            byte[] write = messagePack.write(t);
+            return messagePack.read(write, t);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args){
         List<String> list = new ArrayList<>();
         list.add("1");
@@ -116,10 +138,38 @@ public class DeepCopy {
         try{
             long millis = System.currentTimeMillis();
             Entity another = null;
-            for (int i=0;i<500;i++){
+            for (int i=0;i<1;i++){
                 another = deepCopy(entity);
             }
             System.out.println("深拷贝耗时："+(System.currentTimeMillis() - millis));
+            System.out.println(entity);
+            System.out.println(another);
+            System.out.println();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            long millis = System.currentTimeMillis();
+            Entity another = null;
+            for (int i=0;i<1;i++){
+                another = deepCopyByJSON(entity);
+            }
+            System.out.println("JSON拷贝耗时："+(System.currentTimeMillis() - millis));
+            System.out.println(entity);
+            System.out.println(another);
+            System.out.println();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+            long millis = System.currentTimeMillis();
+            Entity another = null;
+            for (int i=0;i<1;i++){
+                another = deepCopyByMsgpack(entity);
+            }
+            System.out.println("msgpack拷贝耗时："+(System.currentTimeMillis() - millis));
             System.out.println(entity);
             System.out.println(another);
             System.out.println();

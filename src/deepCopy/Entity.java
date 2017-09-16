@@ -1,5 +1,6 @@
 package deepCopy;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,5 +51,16 @@ public class Entity {
 
     public void setIntNums(int[] intNums) {
         this.intNums = intNums;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", addressList=" + addressList +
+                ", nums=" + Arrays.toString(nums) +
+                ", intNums=" + Arrays.toString(intNums) +
+                '}';
     }
 }

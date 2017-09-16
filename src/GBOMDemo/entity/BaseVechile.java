@@ -29,6 +29,33 @@ public class BaseVechile {
     private String electricStep;     //电动踏步
     private String sideDoorModel;    //侧移门形式
 
+    public BaseVechile(Builder builder) {
+        GVW = builder._GVW;
+        CVW = builder._CVW;
+        engine = builder._engine;
+        color = builder._color;
+        wheel = builder._wheel;
+        wheelBase = builder._wheelBase;
+        country = builder._country;
+        displacement = builder._displacement;
+        outerRearview = builder._outerRearview;
+        innerRearview = builder._innerRearview;
+        brand = builder._brand;
+        glassColor = builder._glassColor;
+        seatNum = builder._seatNum;
+        CopilotSeatNum = builder._CopilotSeatNum;
+        rudder = builder._rudder;
+        airBag = builder._airBag;
+        gearBox = builder._gearBox;
+        effluent = builder._effluent;
+        innerColor = builder._innerColor;
+        length = builder._length;
+        width = builder._width;
+        height = builder._height;
+        electricStep = builder._electricStep;
+        sideDoorModel = builder._sideDoorModel;
+    }
+
     public Integer getGVW() {
         return GVW;
     }
@@ -219,5 +246,159 @@ public class BaseVechile {
 
     public void setSideDoorModel(String sideDoorModel) {
         this.sideDoorModel = sideDoorModel;
+    }
+
+    public static class Builder {
+        private Integer _GVW;
+        private Integer _CVW;
+        private String _engine;
+        private String _color;
+        private String _wheel;
+        private Integer _wheelBase;
+        private String _country;
+        private Double _displacement;
+        private String _outerRearview;
+        private String _innerRearview;
+        private String _brand;
+        private String _glassColor;
+        private Integer _seatNum;
+        private Integer _CopilotSeatNum;
+        private String _rudder;
+        private String _airBag;
+        private String _gearBox;
+        private String _effluent;
+        private String _innerColor;
+        private Integer _length;
+        private Integer _width;
+        private Integer _height;
+        private String _electricStep;
+        private String _sideDoorModel;
+
+        public Builder() {
+        }
+
+        public Builder GVW(Integer GVW) {
+            _GVW = GVW;
+            return this;
+        }
+
+        public Builder CVW(Integer CVW) {
+            _CVW = CVW;
+            return this;
+        }
+
+        public Builder engine(String engine) {
+            _engine = engine;
+            return this;
+        }
+
+        public Builder color(String color) {
+            _color = color;
+            return this;
+        }
+
+        public Builder wheel(String wheel) {
+            _wheel = wheel;
+            return this;
+        }
+
+        public Builder wheelBase(Integer wheelBase) {
+            _wheelBase = wheelBase;
+            return this;
+        }
+
+        public Builder country(String country) {
+            _country = country;
+            return this;
+        }
+
+        public Builder displacement(Double displacement) {
+            _displacement = displacement;
+            return this;
+        }
+
+        public Builder outerRearview(String outerRearview) {
+            _outerRearview = outerRearview;
+            return this;
+        }
+
+        public Builder innerRearview(String innerRearview) {
+            _innerRearview = innerRearview;
+            return this;
+        }
+
+        public Builder brand(String brand) {
+            _brand = brand;
+            return this;
+        }
+
+        public Builder glassColor(String glassColor) {
+            _glassColor = glassColor;
+            return this;
+        }
+
+        public Builder seatNum(Integer seatNum) {
+            _seatNum = seatNum;
+            return this;
+        }
+
+        public Builder CopilotSeatNum(Integer CopilotSeatNum) {
+            _CopilotSeatNum = CopilotSeatNum;
+            return this;
+        }
+
+        public Builder rudder(String rudder) {
+            _rudder = rudder;
+            return this;
+        }
+
+        public Builder airBag(String airBag) {
+            _airBag = airBag;
+            return this;
+        }
+
+        public Builder gearBox(String gearBox) {
+            _gearBox = gearBox;
+            return this;
+        }
+
+        public Builder effluent(String effluent) {
+            _effluent = effluent;
+            return this;
+        }
+
+        public Builder innerColor(String innerColor) {
+            _innerColor = innerColor;
+            return this;
+        }
+
+        public Builder length(Integer length) {
+            _length = length;
+            return this;
+        }
+
+        public Builder width(Integer width) {
+            _width = width;
+            return this;
+        }
+
+        public Builder height(Integer height) {
+            _height = height;
+            return this;
+        }
+
+        public Builder electricStep(String electricStep) {
+            _electricStep = electricStep;
+            return this;
+        }
+
+        public Builder sideDoorModel(String sideDoorModel) {
+            _sideDoorModel = sideDoorModel;
+            return this;
+        }
+
+        public BaseVechile builder() {
+            return new BaseVechile(this);
+        }
     }
 }
