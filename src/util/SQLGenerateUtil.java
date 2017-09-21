@@ -297,7 +297,7 @@ public class SQLGenerateUtil {
             updateByPrimaryKey += formatCamel2DBfield(field.getName()) + " = " + createFieldAndType(field) + ",\n";
         }
         updateByPrimaryKey = updateByPrimaryKey.substring(0,updateByPrimaryKey.length() - 2)
-                + "\nWHERE " + primaryKey + "=" + createFieldAndType(primaryKeyField) + "\n"
+                + "\nWHERE " + formatCamel2DBfield(primaryKey) + "=" + createFieldAndType(primaryKeyField) + "\n"
                 + UPDATE_SUFFIX;
 
         content.add(MYBATIS3_XML_HEAD);
