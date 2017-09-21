@@ -185,6 +185,8 @@ public class SQLGenerateUtil {
         List<Field> fieldsExcludePrimaryKey = new ArrayList<>();
         Field[] fields = clazz.getDeclaredFields();
         Field primaryKeyField = null;
+        String dbPrimaryKey = formatCamel2DBfield(primaryKey);
+
         for (Field field : fields) {
             if (field.getName().equals(primaryKey)){
                 primaryKeyField = field;
@@ -199,7 +201,7 @@ public class SQLGenerateUtil {
         String mapperTag = createMapperTag(mapperClazz.getName());
 
         String resultMap = createResultMapTag(BASE_RESULT_MAP,fullName) + "\n"
-                + createIdTag(formatCamel2DBfield(primaryKey),primaryKey,JDBC_MAP.get(primaryKeyField.getType().getSimpleName())) + "\n";
+                + createIdTag(dbPrimaryKey,primaryKey,JDBC_MAP.get(primaryKeyField.getType().getSimpleName())) + "\n";
         for (Field field: fieldsExcludePrimaryKey) {
             resultMap += createResultTag(formatCamel2DBfield(field.getName()),field.getName(),JDBC_MAP.get(field.getType().getSimpleName())) + "\n";
         }
@@ -216,7 +218,7 @@ public class SQLGenerateUtil {
                 + "SELECT \n"
                 + "<include refid=\"Base_Column_List\" /> \n"
                 + "FROM " + tableName + "\n"
-                + "WHERE " + formatCamel2DBfield(primaryKey)
+                + "WHERE " + dbPrimaryKey
                 + " = " + createFieldAndType(primaryKeyField) + "\n"
                 + SELECT_SUFFIX;
 
@@ -241,7 +243,7 @@ public class SQLGenerateUtil {
         String deleteByPrimaryKey = createSqlStatementTag(
                 DELETE,METHOD_DELETEBYPRIMARYKEY, JAVA_TYPE_STRING,null,null) + "\n"
                 + "DELETE FROM " + tableName + "\n"
-                + "WHERE " + formatCamel2DBfield(primaryKey)
+                + "WHERE " + dbPrimaryKey
                 + " = " + createFieldAndType(primaryKeyField) + "\n"
                 + DELETE_SUFFIX;
 
@@ -286,7 +288,7 @@ public class SQLGenerateUtil {
             updateByPrimaryKeySelective += createIfUpdateTag(field) + "\n";
         }
         updateByPrimaryKeySelective += SET_SUFFIX + "\n"
-                + "WHERE " + formatCamel2DBfield(primaryKey)
+                + "WHERE " + dbPrimaryKey
                 + " = " + createFieldAndType(primaryKeyField) + "\n" +UPDATE_SUFFIX;
 
         String updateByPrimaryKey = createSqlStatementTag(
@@ -297,7 +299,7 @@ public class SQLGenerateUtil {
             updateByPrimaryKey += formatCamel2DBfield(field.getName()) + " = " + createFieldAndType(field) + ",\n";
         }
         updateByPrimaryKey = updateByPrimaryKey.substring(0,updateByPrimaryKey.length() - 2)
-                + "\nWHERE " + formatCamel2DBfield(primaryKey) + "=" + createFieldAndType(primaryKeyField) + "\n"
+                + "\nWHERE " + dbPrimaryKey + "=" + createFieldAndType(primaryKeyField) + "\n"
                 + UPDATE_SUFFIX;
 
         content.add(MYBATIS3_XML_HEAD);
