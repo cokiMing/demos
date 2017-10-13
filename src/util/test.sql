@@ -1,0 +1,27 @@
+CREATE TABLE base_vehicle (
+  color             VARCHAR(30) PRIMARY KEY,
+  _g_v_w            INTEGER,
+  _c_v_w            INTEGER,
+  engine            VARCHAR(30),
+  wheel             VARCHAR(30),
+  wheel_base        INTEGER,
+  country           VARCHAR(30),
+  displacement      NUMERIC(8, 2),
+  outer_rearview    VARCHAR(30),
+  inner_rearview    VARCHAR(30),
+  brand             VARCHAR(30),
+  glass_color       VARCHAR(30),
+  seat_num          INTEGER,
+  _copilot_seat_num INTEGER,
+  rudder            VARCHAR(30),
+  air_bag           VARCHAR(30),
+  gear_box          VARCHAR(30),
+  effluent          VARCHAR(30),
+  inner_color       VARCHAR(30),
+  length            INTEGER,
+  width             INTEGER,
+  height            INTEGER,
+  electric_step     VARCHAR(30),
+  side_door_model   VARCHAR(30)
+)
+  CHARSET = utf8;
