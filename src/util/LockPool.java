@@ -15,7 +15,7 @@ public final class LockPool<L> {
     //锁的生命时长：ms
     private long expire = 0L;
     //锁的生命周期线程
-    private Thread thread;
+    private Thread lockManager;
     //内部重入锁
     private final ReentrantLock poolLock = new ReentrantLock();
     //控制锁的生命周期线程是否自动销毁
@@ -32,8 +32,8 @@ public final class LockPool<L> {
         this.expire = expire;
         this.lockManagerKeepAlive = lockManagerKeepAlive;
         this.lockManagerCycle = lockManagerCycle;
-        this.thread = createLifeThread();
-        thread.start();
+        this.lockManager = createLifeThread();
+        lockManager.start();
     }
 
     public LockPool(long expire, boolean lockManagerKeepAlive) {
@@ -66,9 +66,9 @@ public final class LockPool<L> {
         ExpireUnit<L> unit = new ExpireUnit<>(lock, System.currentTimeMillis());
         lockArray.add(unit);
 
-        if (thread.getState().equals(Thread.State.TERMINATED)) {
-            thread = createLifeThread();
-            thread.start();
+        if (lockManager.getState().equals(Thread.State.TERMINATED)) {
+            lockManager = createLifeThread();
+            lockManager.start();
         }
         poolLock.unlock();
         return lock;
@@ -110,7 +110,7 @@ public final class LockPool<L> {
                         lockArray.removeAll(newArray);
                     }
 
-                    if (lockArray.isEmpty()) {
+                    if (lockArray.isEmpty() && !lockManagerKeepAlive) {
                         poolLock.unlock();
                         return;
                     }
