@@ -93,6 +93,12 @@ public final class LockPool<L> {
             @Override
             public void run() {
                 while (true) {
+                    try {
+                        Thread.sleep(lockManagerCycle);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     Set<ExpireUnit> newArray = new HashSet<>();
                     poolLock.lock();
                     for (ExpireUnit unit : lockArray) {
@@ -102,18 +108,13 @@ public final class LockPool<L> {
 
                     if (!newArray.isEmpty()) {
                         lockArray.removeAll(newArray);
-                        if (lockArray.size() == 0 && !lockManagerKeepAlive) {
-                            poolLock.unlock();
-                            return;
-                        }
+                    }
+
+                    if (lockArray.isEmpty()) {
+                        poolLock.unlock();
+                        return;
                     }
                     poolLock.unlock();
-
-                    try {
-                        Thread.sleep(lockManagerCycle);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         };
