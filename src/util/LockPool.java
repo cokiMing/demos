@@ -58,6 +58,7 @@ public final class LockPool<L> {
         for (ExpireUnit<L> unit : lockArray) {
             if (unit.hashCode() == lock.hashCode()) {
                 unit.expireTime = System.currentTimeMillis();
+                poolLock.unlock();
                 return unit.lock;
             }
         }
